@@ -33,7 +33,12 @@ export const register = async(req,res)=> {
    const userSaved = await newUser.save()
                 
     const token = await createAccessToken({id:userSaved._id})
-    res.cookie('token',token,cookieOptions)
+    res.cookie('token',token,{
+        httpOnly: NODE_ENV === "production",
+        secure: NODE_ENV === "production",
+        sameSite: NODE_ENV === "production" ? "none" : "lax"
+
+    })
     return res.json({
             id: userSaved._id,
             username: userSaved.username,
@@ -61,7 +66,13 @@ export const login = async(req,res)=> {
         const token = await createAccessToken({id:userFound._id})
         console.log('el token es',token)
         console.log('node',NODE_ENV)
-        res.cookie('token',token,cookieOptions)
+        res.cookie('token',token,
+           {
+        httpOnly: NODE_ENV === "production",
+        secure: NODE_ENV === "production",
+        sameSite: NODE_ENV === "production" ? "none" : "lax",
+    }
+        )
         return res.json({
                 id: userFound._id,
                 username: userFound.username,
