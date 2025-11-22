@@ -25,12 +25,12 @@ export const CustomerFormPage = () =>{
     
     },[])
   
-    const onSubmit= handleSubmit((data)=>{
+    const onSubmit= handleSubmit(async(data)=>{
         if(params.id){
-            updateCustomer(params.id,data)
+            await updateCustomer(params.id,data)
             
         }else{
-            createCustomer(data)
+            await createCustomer(data)
         }
         navigate('/customers')
 

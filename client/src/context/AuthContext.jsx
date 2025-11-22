@@ -51,7 +51,12 @@ export const AuthProvider = ({children}) => {
     }
 
     const createCustomer = async(customer) => {
-        const res = await createCustomersRequest(customer)
+        try {
+             await createCustomersRequest(customer)
+             await getCustomers()
+        } catch (error) {
+            console.log(error)
+        }
     }
     const getCustomer = async(id) => {
         try {
