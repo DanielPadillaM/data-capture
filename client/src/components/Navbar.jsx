@@ -5,22 +5,22 @@ export const Navbar = () => {
     const {isAuthenticated,user,logout} = useAuth()
     console.log(user)
     return(
-        <nav className='bg-zinc-700 my3 flex justify-between py-5 px-10'>
+        <nav className='bg-zinc-700 flex justify-between py-5 px-2.5'>
             <Link to='/'>
-                <h1 className='text-2xl font-bold'>Data App</h1>
+                <h1 className='text-sm font-bold'>Data App</h1>
             </Link>
-            <ul className='flex gap-x-2'>
+            <ul className='flex gap-x-1 text-xs'>
                 {
                     isAuthenticated ? (
                         <>
                             <li>
-                                welcome {user.username}
+                                <p>welcome {user.username}</p>
                             </li>
                              <li>
                                 <Link className='bg-indigo-500 px-4 py-1 rounded-sm' to='/customers'>Data</Link>
                             </li>
                             <li>
-                                <Link className='bg-indigo-500 px-4 py-1 rounded-sm' to='/add-customer'>Add Data</Link>
+                                <Link className='bg-indigo-500 px-4 py-1 rounded-sm' to='/add-customer'>Add</Link>
                             </li>
                             <li>
                                 <Link className='bg-indigo-500 px-4 py-1 rounded-sm' to='/login' onClick={logout}>Logout</Link>

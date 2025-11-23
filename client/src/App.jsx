@@ -15,7 +15,7 @@ const App = () =>{
    
           <BrowserRouter>
           <Navbar/>
-            <main className='container mx-auto p-x-10 py-5'>
+            <main className='container mx-auto py-10 px-7'>
               
               <Routes>
                 <Route index element={<Home/>}/>

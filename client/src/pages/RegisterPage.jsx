@@ -20,7 +20,7 @@ export const RegisterPage = () =>{
 
     return(
         <div className='flex h-[calc(100vh-100px)] items-center justify-center'>
-            <div className='bg-zinc-800 max-w-md p-10 rounded-md'>
+            <div className='bg-zinc-800 max-w-sm p-10 rounded-md'>
             {registerErrors.map((error,i)=> <p key={i} className='bg-red-500 p-2 text-white'>{error}</p>)}
              <h1 className='text-2xl font-bold'>Register</h1>
             <form onSubmit={onSubmit}>
@@ -39,10 +39,10 @@ export const RegisterPage = () =>{
                     errors.password && <p className='text-red-500'>Password is required</p>
                     
                 }
-                <button type="submit">Register</button>
+                <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit">Register</button>
 
             </form>
-            <p className='flex gap-x-2 justify-between'>Already have an account? <Link className='text-sky-500' to="/register">Login</Link></p>
+            <p className='flex gap-x-2'>Already have an account? <Link className='text-sky-500' to="/register">Login</Link></p>
         </div>
         </div>
         
