@@ -1,6 +1,6 @@
 import {useForm} from 'react-hook-form'
 import { useAuth } from '../context/AuthContext'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
 
@@ -9,12 +9,14 @@ export const LoginPage = () =>{
     const {register, handleSubmit,formState:{errors}} = useForm()
      const {signin,isAuthenticated, errors:loginErrors} = useAuth()
      const navigate = useNavigate()
+        const [loading, setLoading] = useState(false)
 
      useEffect(()=>{
         if(isAuthenticated) navigate('/customers')
      },[isAuthenticated])
 
     const onSubmit = handleSubmit((data)=>{
+        setLoading(true)
         signin(data)
     })
 
@@ -34,7 +36,7 @@ export const LoginPage = () =>{
                     errors.password && <p className='text-red-500'>Password is required</p>
                     
                 }
-                <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit">Login</button>
+                <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit" disabled={loading}>{loading ? "Loging.." : "Login"}</button>
 
             </form>
             <p className='flex gap-x-2 '>Don't have an account? <Link className='text-sky-500' to="/register">Sign up</Link></p>

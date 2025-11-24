@@ -1,18 +1,20 @@
 import {useForm} from 'react-hook-form'
 import { useAuth } from '../context/AuthContext'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 
 export const RegisterPage = () =>{
     const {register, handleSubmit,formState:{errors}} = useForm()
      const {signup,isAuthenticated, errors:registerErrors} = useAuth()
      const navigate = useNavigate()
+     const [loading, setLoading] = useState(false)
 
      useEffect(()=>{
         if(isAuthenticated) navigate('/customers')
      },[isAuthenticated])
 
     const onSubmit = handleSubmit((data)=>{
+        setLoading(true)
         signup(data)
         console.log(isAuthenticated)
       
@@ -39,7 +41,7 @@ export const RegisterPage = () =>{
                     errors.password && <p className='text-red-500'>Password is required</p>
                     
                 }
-                <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit">Register</button>
+                <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit" disabled={loading}>{loading ? "Sending.." : "Register"}</button>
 
             </form>
             <p className='flex gap-x-2'>Already have an account? <Link className='text-sky-500' to="/register">Login</Link></p>
