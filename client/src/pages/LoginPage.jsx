@@ -18,6 +18,9 @@ export const LoginPage = () =>{
     const onSubmit = handleSubmit((data)=>{
         setLoading(true)
         signin(data)
+        if(errors || loginErrors){
+            setLoading(false)
+        }
     })
 
     return(

@@ -3,14 +3,13 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import { createAccessToken } from '../libs/jwt.js'
-import {  NODE_ENV, TOKEN_SECRET } from '../config.js'
+import {  TOKEN_SECRET } from '../config.js'
 
 const cookieOptions = {
     httpOnly: process.env.NODE_ENV === "production",
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
      path: '/',
-     //domain: process.env.FRONTEND_URL
   };
 
 export const register = async(req,res)=> {
@@ -33,12 +32,7 @@ export const register = async(req,res)=> {
    const userSaved = await newUser.save()
                 
     const token = await createAccessToken({id:userSaved._id})
-    res.cookie('token',token,{
-        httpOnly: NODE_ENV === "production",
-        secure: NODE_ENV === "production",
-        sameSite: NODE_ENV === "production" ? "none" : "lax"
-
-    })
+    res.cookie('token',token,cookieOptions)
     return res.json({
             id: userSaved._id,
             username: userSaved.username,
@@ -48,7 +42,7 @@ export const register = async(req,res)=> {
 
     
     } catch (error) {
-        return res.status(500).json({message:error.message})
+        return res.status(500).json([error.message])
     }
 }
 
@@ -64,15 +58,8 @@ export const login = async(req,res)=> {
         if(!isMatch) return res.status(400).json(["incorrect paswword"])     
             
         const token = await createAccessToken({id:userFound._id})
-        console.log('el token es',token)
-        console.log('node',NODE_ENV)
-        res.cookie('token',token,
-           {
-        httpOnly: NODE_ENV === "production",
-        secure: NODE_ENV === "production",
-        sameSite: NODE_ENV === "production" ? "none" : "lax",
-    }
-        )
+
+        res.cookie('token',token, cookieOptions)
         return res.json({
                 id: userFound._id,
                 username: userFound.username,
@@ -80,7 +67,7 @@ export const login = async(req,res)=> {
             })
 
     } catch (error) {
-        return res.status(500).json({message:error.message})
+        return res.status(500).json([error.message])
     }
 }
 
@@ -101,7 +88,7 @@ export const profile = async(req,res) =>{
         email:userFound.email
     })
     } catch (error) {
-        return res.status(500).json({error})
+        return res.status(500).json([error.message])
     }
    
 }
@@ -109,16 +96,15 @@ export const profile = async(req,res) =>{
 export const verifyToken = async(req,res) => {
 
      const {token} = req.cookies
-     console.log(token)
 
-        if(!token) return res.status(401).json({message:"Unauthorized"})
+        if(!token) return res.status(401).json(["Unauthorized"])
 
         jwt.verify(token,TOKEN_SECRET,async(err,user) => {
 
-        if(err) return res.status(403).json({message: "invalid token"})
+        if(err) return res.status(403).json(["invalid token"])
 
         const userFound = await User.findById(user.id);
-        if(!userFound) return res.status(401).json({message: "Unauthorized"})
+        if(!userFound) return res.status(401).json(["Unauthorized"])
             return res.json({
                 id:userFound._id,
                 username: userFound.username,

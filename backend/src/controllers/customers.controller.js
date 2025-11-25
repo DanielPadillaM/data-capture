@@ -7,17 +7,17 @@ export const getCustomers = async(req,res) => {
     res.set("Pragma", "no-cache")
     res.set("Expires","0")
 
-    const customers = await Customer.find({user:req.user.id}).populate('user')
+    const customers = await Customer.find({user:req.user.id})
     return res.json(customers)
 }
 
 export const getCustomer = async(req,res) => {
     try {
         const customer = await Customer.findById(req.params.id)
-        if(!customer) return res.status(404).json("Customer not found");
+        if(!customer) return res.status(404).json(["Customer not found"]);
         return res.json(customer)
     } catch (error) {
-        return res.status(500).json(error)
+        return res.status(500).json([error])
     }
 }
 export const createCustomer = async(req,res) => {
@@ -35,14 +35,14 @@ export const updateCustomer = async(req,res) => {
       const customer = await Customer.findByIdAndUpdate(req.params.id,req.body,{
         new:true
       })
-      if(!customer) return res.status(404).json("Customer not found");
+      if(!customer) return res.status(404).json(["Customer not found"]);
     return res.json(customer)
 }
 //Revisar el delete para que envie codigo 204
 export const deleteCustomer = async(req,res) => {
     try {
         const customer = await Customer.findByIdAndDelete(req.params.id)
-    if(!customer) return res.status(404).json("Customer not found");
+    if(!customer) return res.status(404).json(["Customer not found"]);
         return res.status(204).send()
     } catch (error) {
         return res.status(500).json(error)
