@@ -3,14 +3,14 @@ import { TOKEN_SECRET } from '../config.js'
 
 export const createAccessToken = (payload) => {
     return new Promise((resolve,reject)=>{
- 
-        const token =  jwt.sign(
+    
+        jwt.sign(
         payload,
-        TOKEN_SECRET,
-        {
-        expiresIn: '1d'
+        TOKEN_SECRET,{expiresIn: '1d'},
+    (err,token)=>{
+        if(err) reject(err)
+        else resolve(token)
     })
-        resolve(token)
-        reject(err)
+    
     })
 }

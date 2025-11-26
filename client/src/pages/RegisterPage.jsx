@@ -44,7 +44,7 @@ export const RegisterPage = () =>{
                 <button className='bg-indigo-500 px-4 py-1 rounded-sm my-2' type="submit" disabled={loading}>{loading ? "Sending.." : "Register"}</button>
 
             </form>
-            <p className='flex gap-x-2'>Already have an account? <Link className='text-sky-500' to="/register">Login</Link></p>
+            <p className='flex gap-x-2'>Already have an account? <Link className='text-sky-500' to="/login">Login</Link></p>
         </div>
         </div>
         

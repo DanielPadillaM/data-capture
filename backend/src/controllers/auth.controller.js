@@ -3,13 +3,13 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 import { createAccessToken } from '../libs/jwt.js'
-import {  TOKEN_SECRET } from '../config.js'
+import {  NODE_ENV, TOKEN_SECRET } from '../config.js'
 
 const cookieOptions = {
-    httpOnly: process.env.NODE_ENV === "production",
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-     path: '/',
+    httpOnly: NODE_ENV === "production",
+    secure: NODE_ENV === "production",
+    sameSite: NODE_ENV === "production" ? "none" : "lax",
+     path: "/",
   };
 
 export const register = async(req,res)=> {
@@ -23,17 +23,22 @@ export const register = async(req,res)=> {
 
     
     try {
+
         const passwordHash = await bcrypt.hash(password,10)
-    const newUser = new User({
+
+        const newUser = new User({
                 username,
                 email,
                 password: passwordHash
                 })
-   const userSaved = await newUser.save()
+
+        const userSaved = await newUser.save()
                 
-    const token = await createAccessToken({id:userSaved._id})
-    res.cookie('token',token,cookieOptions)
-    return res.json({
+        const token = await createAccessToken({id:userSaved._id})
+
+        res.cookie('token',token,cookieOptions)
+
+        return res.json({
             id: userSaved._id,
             username: userSaved.username,
             email: userSaved.email
@@ -48,6 +53,9 @@ export const register = async(req,res)=> {
 
 export const login = async(req,res)=> {
     const {email, password}= req.body
+      if(!email || !password){
+        return res.status(400).json(["Email and password are required"])
+    }
 
     try {
 
@@ -60,6 +68,7 @@ export const login = async(req,res)=> {
         const token = await createAccessToken({id:userFound._id})
 
         res.cookie('token',token, cookieOptions)
+
         return res.json({
                 id: userFound._id,
                 username: userFound.username,
@@ -81,7 +90,7 @@ export const logout = (req,res)=>{
 export const profile = async(req,res) =>{
     try {
         const userFound = await User.findById(req.user.id)
-    if(!userFound) return  res.status(400).json(["User not found"])
+        if(!userFound) return  res.status(404).json(["User not found"])
     return res.json({
         id:userFound._id,
         username:userFound.username,
@@ -96,21 +105,24 @@ export const profile = async(req,res) =>{
 export const verifyToken = async(req,res) => {
 
      const {token} = req.cookies
+     if(!token) return res.status(401).json(["Unauthorized"])
 
-        if(!token) return res.status(401).json(["Unauthorized"])
-
-        jwt.verify(token,TOKEN_SECRET,async(err,user) => {
-
-        if(err) return res.status(403).json(["invalid token"])
-
-        const userFound = await User.findById(user.id);
+     try {
+         
+        const decoded = jwt.verify(token,TOKEN_SECRET)
+        
+         const userFound = await User.findById(decoded.id);
         if(!userFound) return res.status(401).json(["Unauthorized"])
-            return res.json({
+
+           return res.json({
                 id:userFound._id,
                 username: userFound.username,
                 email:userFound.email
             })
+     } catch (error) {
+        return res.status(403).json("Invalid Token")
         
+     }
 
-        })
+       
 }

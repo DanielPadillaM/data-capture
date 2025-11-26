@@ -6,10 +6,13 @@ import { validateSchema } from "../middlewares/validator.middleware.js";
 
 const router = Router()
 
-router.get('/customers',validateToken,getCustomers)
-router.post('/customers',validateToken,validateSchema(createCustomerSchema),createCustomer)
-router.get('/customers/:id',validateToken,getCustomer)
-router.delete('/customers/:id',validateToken,deleteCustomer)
-router.put('/customers/:id',validateToken,updateCustomer)
+router.use(validateToken)
+
+router.get('/customers', getCustomers)
+router.post('/customers', validateSchema(createCustomerSchema), createCustomer)
+router.get('/customers/:id', getCustomer)
+router.put('/customers/:id', updateCustomer)
+router.delete('/customers/:id', deleteCustomer)
+
 
 export default router

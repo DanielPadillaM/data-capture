@@ -13,7 +13,7 @@ export const CustomerFormPage = () =>{
     const [loading, setLoading] = useState(false)
 
     useEffect(()=>{
-        console.log(loading)
+        console.log(params)
        
         async function loadCustomer(){
             if(params.id){

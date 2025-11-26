@@ -9,10 +9,13 @@ import { FRONTEND_URL } from "./config.js";
 
 const app = express();
 
+app.set("trust proxy", 1)
+
 app.use(
   cors({
     origin: FRONTEND_URL,
     credentials: true,
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
   })
 );
 
