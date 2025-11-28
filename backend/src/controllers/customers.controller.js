@@ -2,10 +2,10 @@ import Customer from '../models/customer.model.js'
 
 export const getCustomers = async(req,res) => {
 
-    //solucion evitar cache
-    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
-    res.set("Pragma", "no-cache")
-    res.set("Expires","0")
+    // //solucion evitar cache
+    // res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
+    // res.set("Pragma", "no-cache")
+    // res.set("Expires","0")
     try {
         const customers = await Customer.find({user:req.user.id})
         return res.json(customers)
