@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import {
-  LoginPage,
   Home,
-  RegisterPage,
+  AuthPage,
   CustomersPage,
   CustomerFormPage,
 } from "./pages";
@@ -23,8 +22,8 @@ const App = () => {
           <main className="container mx-auto py-10 px-7">
             <Routes>
               <Route index element={<Home />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegisterPage />} />
+              <Route path="login" element={<AuthPage />} />
+              <Route path="register" element={<AuthPage />} />
 
               <Route element={<ProtectedRoute />}>
                 <Route path="profile" element={<h1>profile</h1>} />

@@ -1,19 +1,18 @@
-import jwt from 'jsonwebtoken'
-import { TOKEN_SECRET } from '../config.js'
+import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../config.js";
+import { promisify } from "util";
 
-export const validateToken = (req,res,next) =>{
+const verifyAsync = promisify(jwt.verify);
 
-   try {
-     const {token} = req.cookies
+export const validateToken = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
+    if (!token) return res.status(401).json(["Unauthorized"]);
 
-    if(!token) return res.status(401).json(["Unauthorized"])
-
-    jwt.verify(token,TOKEN_SECRET,(err,decodedUser) => {
-    if(err) return res.status(401).json(["invalid token"])
-        req.user = decodedUser
-         next();
-    })
-   } catch (error) {
-        return res.status(500).json(["Server error"])
-   }
-}
+    const decodedUser = await verifyAsync(token, TOKEN_SECRET);
+    req.user = decodedUser;
+    next();
+  } catch (error) {
+    return res.status(401).json(["Invalid token"]);
+  }
+};

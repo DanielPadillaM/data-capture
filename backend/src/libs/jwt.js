@@ -1,16 +1,13 @@
-import jwt from 'jsonwebtoken'
-import { TOKEN_SECRET } from '../config.js'
+import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../config.js";
+import { promisify } from "util";
 
-export const createAccessToken = (payload) => {
-    return new Promise((resolve,reject)=>{
-    
-        jwt.sign(
-        payload,
-        TOKEN_SECRET,{expiresIn: '1d'},
-    (err,token)=>{
-        if(err) reject(err)
-        else resolve(token)
-    })
-    
-    })
-}
+const signAsync = promisify(jwt.sign);
+
+export const createAccessToken = async (payload) => {
+  try {
+    return await signAsync(payload, TOKEN_SECRET, { expiresIn: "1d" });
+  } catch (error) {
+    throw new Error("Error creating access token");
+  }
+};
