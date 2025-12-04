@@ -1,35 +1,45 @@
-
-import { useEffect} from "react";
-import {useLocation, useNavigate } from "react-router";
+import { useEffect, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../hooks";
 import { AuthForm } from "../components/AuthForm";
 import { formFields } from "./config";
 
 export const AuthPage = () => {
-
-  const { signup, signin, isAuthenticated, errors} = useAuth();
+  const { signup, signin, isAuthenticated, errors } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation()
-  const url = location.pathname
+  const location = useLocation();
+  const { pathname } = location;
+  const isRegister = pathname === "/register";
 
-  
-
+  const pageConfig = useMemo(
+    () => ({
+      title: isRegister ? "Register" : "Login",
+      fields: isRegister ? formFields.registerFields : formFields.loginFields,
+      submitLabel: isRegister ? "Register" : "Login",
+      onSubmit: isRegister ? signup : signin,
+      redirect: isRegister
+        ? { text: "Already have an account?", linkText: "Login", to: "/login" }
+        : {
+            text: "Don't have an account?",
+            linkText: "Sign up",
+            to: "/register",
+          },
+    }),
+    [isRegister, signup, signin]
+  );
 
   useEffect(() => {
     if (isAuthenticated) navigate("/customers");
   }, [isAuthenticated]);
 
-
-
   return (
-     <AuthForm
-         title={url === "/register" ? "Register" : "Login"}
-         fields={url === "/register" ? formFields.registerFields : formFields.loginFields}
-         errors={errors}
-         submitLabel={url === "/register" ? "Register" : "Login"}
-         onSubmit={url === "/register" ? signup : signin}
-         redirect={url === "/register" ? { text: "Already have an account?", linkText: "Login" } : { text: "Don't have an account?", linkText: "Sign up" }}
-         redirectLink={url === "/register" ? "/login" : "/register"}
-       />
+    <AuthForm
+      title={pageConfig.title}
+      fields={pageConfig.fields}
+      errors={errors}
+      submitLabel={pageConfig.submitLabel}
+      onSubmit={pageConfig.onSubmit}
+      redirect={pageConfig.redirect}
+    />
   );
 };

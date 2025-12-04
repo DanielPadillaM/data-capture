@@ -8,11 +8,16 @@ const router = Router()
 
 router.use(validateToken)
 
-router.get('/customers', getCustomers)
-router.post('/customers', validateSchema(createCustomerSchema), createCustomer)
-router.get('/customers/:id', getCustomer)
-router.put('/customers/:id', updateCustomer)
-router.delete('/customers/:id', deleteCustomer)
+router
+.route("/customers")
+.get(getCustomers)
+.post(validateSchema(createCustomerSchema), createCustomer)
+
+router
+.route("/customers/:id")
+.get(getCustomer)
+.put(updateCustomer)
+.delete(deleteCustomer)
 
 
 export default router

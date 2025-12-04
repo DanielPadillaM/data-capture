@@ -4,13 +4,12 @@ import { Link, useParams } from "react-router";
 import { useCustomers } from "../hooks";
 
 export const AuthForm = ({
-  title,
-  fields,
+  title = "",
+  fields = [],
   onSubmit,
-  errors,
-  submitLabel,
-  redirect,
-  redirectLink,
+  errors = [],
+  submitLabel = "Enviar",
+  redirect = {},
 }) => {
   const {
     register,
@@ -18,28 +17,43 @@ export const AuthForm = ({
     setValue,
     formState: { errors: formErrors },
   } = useForm();
+
   const [loading, setLoading] = useState(false);
+  const params = useParams();
+   const {getCustomer} = useCustomers()
 
   const handleFromSubmit = handleSubmit(async (data) => {
-    setLoading(true);
+    try {
+      setLoading(true);
     const result = await onSubmit(data);
     console.log(result)
-    if (!result.ok) setLoading(false);
+    if (!result?.ok) setLoading(false);
+    } catch (error) {
+      console.error("Submit error:",error)
+      setLoading(false)
+    }
   });
-    const params = useParams();
-    const {getCustomer} = useCustomers()
+
+   
    useEffect(() => {
       async function loadCustomer() {
-        if (params.id) {
+        if(!params.id) return
+        try {
+         
           const { data } = await getCustomer(params.id);
-  
-          setValue("name", data.name);
-          setValue("email", data.email);
-          setValue("number", data.number);
+
+          fields.forEach((field)=>{
+            if(data[field.name] !== undefined){
+              setValue(field.name,data[field.name])
+            }
+          }) 
+      }catch (error) {
+          console.error("Error loading customer:", error)
         }
+      
       }
       loadCustomer();
-    }, []);
+    }, [params.id,getCustomer,setValue,fields]);
 
   return (
     <div className="flex h-[calc(100vh-100px)] items-center justify-center">
@@ -77,13 +91,16 @@ export const AuthForm = ({
             {loading ? "Processing..." : submitLabel}
           </button>
         </form>
+          {redirect.text && (
+              <p className="flex gap-x-2">
+              {redirect.text}
+              <Link className="text-sky-500" to={redirect.to}>
+                {redirect.linkText}
+              </Link>
+              </p>
 
-        <p className="flex gap-x-2">
-          {redirect?.text}{" "}
-          <Link className="text-sky-500" to={redirectLink}>
-            {redirect?.linkText}
-          </Link>
-        </p>
+          )}
+        
       </div>
     </div>
   );
