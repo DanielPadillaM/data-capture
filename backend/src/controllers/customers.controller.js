@@ -10,7 +10,7 @@ export const getCustomers = async(req,res) => {
         const customers = await Customer.find({user:req.user.id})
         return res.json(customers)
     } catch (error) {
-        console.error(error)
+        console.error("error en get customers " , error)
         return res.status(500).json(["Server Error"])
     }
 
