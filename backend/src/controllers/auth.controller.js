@@ -6,9 +6,9 @@ import { createAccessToken } from '../libs/jwt.js'
 import {  NODE_ENV, TOKEN_SECRET } from '../config.js'
 
 const cookieOptions = {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
+    httpOnly: NODE_ENV === "production",
+    secure: NODE_ENV === "production",
+    sameSite: NODE_ENV === "production" ? "none" : "lax",
      path: "/",
   };
 
