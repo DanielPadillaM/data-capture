@@ -7,8 +7,8 @@ import {  NODE_ENV, TOKEN_SECRET } from '../config.js'
 
 const cookieOptions = {
     httpOnly: NODE_ENV === "production",
-    secure: NODE_ENV === "production",
-    sameSite: NODE_ENV === "production" ? "none" : "lax",
+    secure: false,
+    sameSite: "lax",
      path: "/",
   };
 

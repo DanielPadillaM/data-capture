@@ -30,7 +30,7 @@ export const AuthPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) navigate("/customers");
-  }, [isAuthenticated]);
+  }, [isAuthenticated,navigate]);
 
   return (
     <AuthForm
