@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
         const res = await verifyTokenRequest();
         const localToken = localStorage.getItem("token");
         const sessionToken = sessionStorage.getItem("token");
-        if (!res.data || !localToken || !sessionToken) {
+        if (!res.data && !localToken && !sessionToken) {
           setIsAuthenticated(false);
           setUser(null);
         } else {
