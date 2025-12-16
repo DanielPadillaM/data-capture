@@ -108,9 +108,32 @@ export const AuthProvider = ({ children }) => {
           setUser(null);
         }
       } catch (error) {
-        // Si verify falla y no hay token en storage => desloguear
-        setIsAuthenticated(false);
-        setUser(null);
+        // Si verify falla: intentar restaurar desde storage (por ejemplo cuando la cookie no se envía)
+        const localToken = localStorage.getItem("token");
+        const sessionToken = sessionStorage.getItem("token");
+        const localUser = localStorage.getItem("user");
+        const sessionUser = sessionStorage.getItem("user");
+
+        if (localToken || sessionToken) {
+          try {
+            const parsedUser = localUser
+              ? JSON.parse(localUser)
+              : sessionUser
+              ? JSON.parse(sessionUser)
+              : null;
+            setIsAuthenticated(true);
+            setUser(parsedUser);
+          } catch (e) {
+            // parsing falló: limpiar storage y desloguear
+            localStorage.removeItem("user");
+            sessionStorage.removeItem("user");
+            setIsAuthenticated(false);
+            setUser(null);
+          }
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
