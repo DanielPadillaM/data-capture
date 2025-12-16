@@ -20,7 +20,7 @@ export const CustomersPage = () => {
   if (customers.length === 0) return <h1>No Customers</h1>;
 
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
+    <div className="container mx-auto py-10 px-7 grid sm:grid-cols-2 md:grid-cols-3 gap-2">
       {customers.map((customer) => (
         <CustomerCard key={customer._id} customer={customer} />
       ))}

@@ -39,9 +39,12 @@ export const register = async(req,res)=> {
         res.cookie('token',token,cookieOptions)
 
         return res.json({
+            user: {
             id: userSaved._id,
             username: userSaved.username,
-            email: userSaved.email
+            email: userSaved.email,
+            },
+            accesToken: token
         })
 
 
@@ -70,9 +73,12 @@ export const login = async(req,res)=> {
         res.cookie('token',token, cookieOptions)
 
         return res.json({
+                user: {
                 id: userFound._id,
                 username: userFound.username,
-                email: userFound.email
+                email: userFound.email,
+                },
+                accesToken: token
             })
 
     } catch (error) {
@@ -81,7 +87,6 @@ export const login = async(req,res)=> {
 }
 
 export const logout = (req,res)=>{
-     
     res.clearCookie('token',cookieOptions)
     return res.json({message:"logout"})
 

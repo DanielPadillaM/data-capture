@@ -19,7 +19,9 @@ export const AuthProvider = ({ children }) => {
   const signup = async (user) => {
     try {
       const res = await registerRequest(user);
-      setUser(res.data);
+      localStorage.setItem("token", res.data.accesToken);
+      sessionStorage.setItem("token", res.data.accesToken);
+      setUser(res.data.user);
       setIsAuthenticated(true);
       setErrors([]);
       return { ok: true };
@@ -31,7 +33,10 @@ export const AuthProvider = ({ children }) => {
   const signin = async (user) => {
     try {
       const res = await loginRequest(user);
-      setUser(res.data);
+      localStorage.setItem("token", res.data.accesToken);
+      sessionStorage.setItem("token", res.data.accesToken);
+      setUser(res.data.user);
+      console.log(res.data.user);
       setIsAuthenticated(true);
       setErrors([]);
       return { ok: true };
@@ -43,6 +48,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await logoutRequest();
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
       setUser(null);
       setIsAuthenticated(false);
       return { ok: true };
@@ -65,7 +72,9 @@ export const AuthProvider = ({ children }) => {
     const checkLogin = async () => {
       try {
         const res = await verifyTokenRequest();
-        if (!res.data) {
+        const localToken = localStorage.getItem("token");
+        const sessionToken = sessionStorage.getItem("token");
+        if (!res.data || !localToken || !sessionToken) {
           setIsAuthenticated(false);
           setUser(null);
         } else {

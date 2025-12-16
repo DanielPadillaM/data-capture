@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import {
-  Home,
   AuthPage,
   CustomersPage,
   CustomerFormPage,
@@ -12,6 +11,7 @@ import { AuthProvider, CustomersProvider } from "./context";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 import { Navbar } from "./components/Navbar";
+import Home from "./pages/Home";
 
 const App = () => {
   return (
@@ -19,7 +19,7 @@ const App = () => {
       <CustomersProvider>
         <BrowserRouter>
           <Navbar />
-          <main className="container mx-auto py-10 px-7">
+          <main >
             <Routes>
               <Route index element={<Home />} />
               <Route path="login" element={<AuthPage />} />
