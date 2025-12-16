@@ -5,15 +5,15 @@ import { promisify } from "util";
 const verifyAsync = promisify(jwt.verify);
 
 export const validateToken = async (req, res, next) => {
-    let { token } = req.cookies;
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ") || !token) return res.status(401).json(["Unauthorized validateToken"]);
-    if (!token && authHeader) {
-        token = authHeader.split(" ")[1] ;
+  
+  try {
+      let { token } = req.cookies;
+    if (!token && req.headers.authorization) {
+        token = req.headers.authorization.split(" ")[1] ;
      
     }
-  try {
+
+    if (!token) return res.status(401).json(["Unauthorized validateToken"]);
     const decodedUser = await verifyAsync(token, TOKEN_SECRET);
     req.user = decodedUser;
     next();
