@@ -8,7 +8,7 @@ export const validateToken = async (req, res, next) => {
     let { token } = req.cookies;
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ") || !token) return res.status(401).json(["Unauthorized"]);
+    if (!authHeader || !authHeader.startsWith("Bearer ") || !token) return res.status(401).json(["Unauthorized validateToken"]);
     if (!token && authHeader) {
         token = authHeader.split(" ")[1] ;
      
