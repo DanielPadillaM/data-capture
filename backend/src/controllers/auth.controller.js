@@ -113,8 +113,14 @@ export const verifyToken = async(req,res) => {
 
      try {
            const {token} = req.cookies
+        const localToken = localStorage.getItem("token");
+        const sessionToken = sessionStorage.getItem("token");
            console.log("Token in verifyToken:", token, req.headers.authorization);
+           if(!token && localToken || sessionToken){
+            token = localToken || sessionToken;
+           }
      if(!token) return res.status(401).json(["Unauthorized...   No token provided"])
+        
          
         const decoded = jwt.verify(token,TOKEN_SECRET)
         
