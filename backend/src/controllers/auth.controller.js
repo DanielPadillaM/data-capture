@@ -109,10 +109,12 @@ export const profile = async(req,res) =>{
 
 export const verifyToken = async(req,res) => {
 
-     const {token} = req.cookies
-     if(!token) return res.status(401).json(["Unauthorized...   No token provided"])
+  
 
      try {
+           const {token} = req.cookies
+           console.log("Token in verifyToken:", token, req.headers.authorization);
+     if(!token) return res.status(401).json(["Unauthorized...   No token provided"])
          
         const decoded = jwt.verify(token,TOKEN_SECRET)
         
