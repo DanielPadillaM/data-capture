@@ -110,20 +110,23 @@ export const profile = async(req,res) =>{
 export const verifyToken = async(req,res) => {
 
      const {token} = req.cookies
-     if(!token) return res.status(401).json(["Unauthorized"])
+     if(!token) return res.status(401).json(["Unauthorized...   No token provided"])
 
      try {
          
         const decoded = jwt.verify(token,TOKEN_SECRET)
         
          const userFound = await User.findById(decoded.id);
-        if(!userFound) return res.status(401).json(["Unauthorized"])
+        if(!userFound) return res.status(401).json(["Unauthorized User"])
 
            return res.json({
-                id:userFound._id,
+                user: {
+                    id:userFound._id,
                 username: userFound.username,
-                email:userFound.email
-            })
+                email:userFound.email,
+                },
+                accesToken: token
+           })
      } catch (error) {
         return res.status(403).json("Invalid Token")
         
